@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Capstone Project Report — Smart City Route Optimization System</title>
+  <style>
+    @page {
+      size: A4;
+      margin: 18mm 16mm 18mm 16mm;
+    }
+    * { box-sizing: border-box; }
+    body {
+      font-family: 'Segoe UI', Calibri, Arial, sans-serif;
+      color: #0f172a;
+      line-height: 1.55;
+      font-size: 10.5pt;
+      margin: 0;
+      padding: 0;
+    }
+
+    /* Cover Page */
+    .cover {
+      min-height: 252mm;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      border: 2px solid #1e3a8a;
+      border-radius: 10px;
+      padding: 28mm 18mm;
+      background: linear-gradient(180deg, #f8fafc 0%, #ffffff 45%, #eff6ff 100%);
+      page-break-after: always;
+    }
+    .cover-top {
+      text-align: center;
+    }
+    .cover-tag {
+      display: inline-block;
+      background: #1e3a8a;
+      color: #ffffff;
+      font-size: 10pt;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      padding: 6px 18px;
+      border-radius: 999px;
+      text-transform: uppercase;
+      margin-bottom: 18px;
+    }
+    .cover h1 {
+      font-size: 26pt;
+      color: #0f172a;
+      line-height: 1.2;
+      margin: 10px 0 12px;
+    }
+    .cover-sub {
+      font-size: 13pt;
+      color: #334155;
+      font-weight: 500;
+      max-width: 520px;
+      margin: 0 auto 24px;
+    }
+    .cover-problem {
+      text-align: left;
+      background: #ffffff;
+      border-left: 4px solid #2563eb;
+      border-radius: 6px;
+      padding: 14px 18px;
+      box-shadow: 0 2px 8px rgba(15, 23, 42, 0.06);
+      margin-top: 18px;
+    }
+    .cover-problem h3 {
+      margin: 0 0 6px;
+      font-size: 10.5pt;
+      text-transform: uppercase;
+      color: #1d4ed8;
+      letter-spacing: 0.6px;
+    }
+    .cover-meta {
+      background: #0f172a;
+      color: #f8fafc;
+      border-radius: 8px;
+      padding: 18px 22px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px 24px;
+    }
+    .meta-item label {
+      display: block;
+      font-size: 8.5pt;
+      text-transform: uppercase;
+      color: #94a3b8;
+      letter-spacing: 0.7px;
+    }
+    .meta-item span {
+      font-size: 12pt;
+      font-weight: 700;
+      color: #ffffff;
+    }
+
+    /* Headings & Text */
+    h2 {
+      font-size: 15pt;
+      color: #1e3a8a;
+      border-bottom: 2px solid #cbd5e1;
+      padding-bottom: 4px;
+      margin: 20px 0 10px;
+      page-break-after: avoid;
+    }
+    h3 {
+      font-size: 12pt;
+      color: #0f172a;
+      margin: 14px 0 6px;
+      page-break-after: avoid;
+    }
+    p { margin: 0 0 9px; text-align: justify; }
+    ul, ol { margin: 0 0 10px 20px; }
+    li { margin-bottom: 4px; }
+    code {
+      font-family: Consolas, 'Courier New', monospace;
+      background: #f1f5f9;
+      padding: 1px 5px;
+      border-radius: 4px;
+      font-size: 9.2pt;
+      color: #0f172a;
+    }
+    pre {
+      background: #0f172a;
+      color: #e2e8f0;
+      padding: 11px 14px;
+      border-radius: 7px;
+      font-family: Consolas, 'Courier New', monospace;
+      font-size: 8.8pt;
+      line-height: 1.42;
+      overflow-x: auto;
+      margin: 8px 0 12px;
+      break-inside: avoid;
+    }
+
+    /* Tables */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 10px 0 14px;
+      font-size: 9.2pt;
+      break-inside: avoid;
+    }
+    th {
+      background: #1e3a8a;
+      color: #ffffff;
+      text-align: left;
+      padding: 7px 9px;
+      font-weight: 600;
+    }
+    td {
+      padding: 6px 9px;
+      border-bottom: 1px solid #cbd5e1;
+    }
+    tr:nth-child(even) td { background: #f8fafc; }
+
+    /* Callouts & Figures */
+    .callout {
+      background: #eff6ff;
+      border-left: 4px solid #2563eb;
+      padding: 10px 14px;
+      border-radius: 5px;
+      margin: 10px 0 12px;
+      break-inside: avoid;
+    }
+    .figure {
+      border: 1px solid #cbd5e1;
+      border-radius: 8px;
+      padding: 10px;
+      background: #ffffff;
+      margin: 12px 0 16px;
+      break-inside: avoid;
+      text-align: center;
+    }
+    .figure img {
+      max-width: 100%;
+      height: auto;
+      border-radius: 4px;
+      border: 1px solid #e2e8f0;
+    }
+    .caption {
+      font-size: 9.2pt;
+      color: #475569;
+      margin-top: 7px;
+      font-style: italic;
+    }
+    .page-break { page-break-before: always; }
+    .badge-pass {
+      background: #dcfce7;
+      color: #166534;
+      font-weight: 700;
+      padding: 1px 6px;
+      border-radius: 4px;
+      font-size: 8.5pt;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- COVER PAGE -->
+  <section class="cover">
+    <div class="cover-top">
+      <div class="cover-tag">Capstone Project Report &mdash; Project 1</div>
+      <h1>Smart City Route Optimization System</h1>
+      <p class="cover-sub">
+        Graph-Based Urban Navigation Engine Implementing and Benchmarking Dijkstra&rsquo;s and Bellman-Ford Shortest Path Algorithms
+      </p>
+
+      <div class="cover-problem">
+        <h3>Problem Statement</h3>
+        <p style="margin:0;">
+          Develop a route optimization system that finds the shortest and most efficient route between different locations in a city.
+          The system represents locations as vertices and roads as weighted edges, implements <strong>Dijkstra&rsquo;s</strong> and
+          <strong>Bellman-Ford</strong> algorithms to calculate shortest paths, and compares their performance across varying graph sizes.
+        </p>
+      </div>
+    </div>
+
+    <div class="cover-meta">
+      <div class="meta-item">
+        <label>Submitted By</label>
+        <span>Himanshu Yadav</span>
+      </div>
+      <div class="meta-item">
+        <label>Roll Number</label>
+        <span>2501730437</span>
+      </div>
+      <div class="meta-item">
+        <label>Project Domain</label>
+        <span>Graph Algorithms &amp; Smart Mobility</span>
+      </div>
+      <div class="meta-item">
+        <label>Technology Stack</label>
+        <span>Node.js v24, HTML5/SVG, CSS3</span>
+      </div>
+      <div class="meta-item">
+        <label>Core Algorithms</label>
+        <span>Dijkstra (Min-Heap) &amp; Bellman-Ford</span>
+      </div>
+      <div class="meta-item">
+        <label>Submission Date</label>
+        <span>November 2026</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ABSTRACT & INTRODUCTION -->
+  <h2>1. Abstract</h2>
+  <p>
+    Efficient urban routing is a foundational requirement for modern Smart City mobility, emergency dispatch, logistics, and electric-vehicle (EV) energy management.
+    In this capstone project, the <strong>Smart City Route Optimization System</strong> models a realistic urban road network (<em>NeoMetro Smart City</em>) as a weighted directed graph
+    <i>G</i> = (<i>V</i>, <i>E</i>), where intersections and landmarks are represented as vertices and road corridors are represented as weighted edges.
+  </p>
+  <p>
+    Two canonical single-source shortest-path algorithms&mdash;<strong>Dijkstra&rsquo;s Algorithm</strong> backed by a custom Binary Min-Heap priority queue and the
+    <strong>Bellman-Ford Algorithm</strong> with optional early termination and negative-weight cycle detection&mdash;are implemented from scratch without external graph libraries.
+    The system provides an interactive web dashboard, a command-line interface (CLI), automated unit verification tests, and a reproducible multi-scale benchmarking suite
+    covering sparse (<i>E</i> &approx; 6<i>V</i>) and dense (<i>E</i> &approx; 0.25<i>V</i><sup>2</sup>) networks from <i>V</i> = 20 up to <i>V</i> = 1500 vertices. Experimental benchmarks confirm that Dijkstra achieves
+    up to a <strong>466.35&times; speedup</strong> on sparse graphs (<i>V</i> = 1500) and <strong>910.7&times; speedup</strong> on dense graphs (<i>V</i> = 1000) over strict <i>O</i>(<i>V</i>&middot;<i>E</i>) Bellman-Ford,
+    while Bellman-Ford uniquely handles negative edge credits and detects negative-weight cycles.
+  </p>
+
+  <h2>2. Introduction &amp; Objectives</h2>
+  <p>
+    Urban transportation networks involve thousands of intersections connected by heterogeneous roads with varying lengths, speed limits, one-way restrictions, and real-time congestion.
+    Selecting the optimal path between an origin and a destination requires choosing both an accurate graph abstraction and an algorithm suited to the network&rsquo;s weight properties and scale.
+  </p>
+  <ul>
+    <li><strong>Graph Abstraction:</strong> Model urban districts, hospitals, transit hubs, tech parks, and airports as vertices, and roads as weighted edges supporting travel time (min), distance (km), and eco-cost (with EV credits).</li>
+    <li><strong>Dual Algorithm Implementation:</strong> Build custom, instrumented implementations of Dijkstra&rsquo;s algorithm (<i>O</i>((<i>V</i> + <i>E</i>) log <i>V</i>)) and Bellman-Ford (<i>O</i>(<i>V</i>&middot;<i>E</i>)).</li>
+    <li><strong>Edge-Case &amp; Negative-Weight Handling:</strong> Demonstrate how greedy Dijkstra fails when negative weights exist, and verify Bellman-Ford&rsquo;s exactness and negative-cycle detection.</li>
+    <li><strong>Empirical Benchmarking:</strong> Measure execution time, edge relaxation counts, and asymptotic scaling across varying vertex counts and edge densities.</li>
+  </ul>
+
+  <h2>3. System Architecture &amp; Graph Modeling</h2>
+  <p>
+    The project is structured into modular ES modules inside <code>smart-city-route-optimizer/</code> with zero third-party runtime dependencies:
+  </p>
+  <table>
+    <thead>
+      <tr>
+        <th>Module / File</th>
+        <th>Responsibility</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><code>src/models/graph.js</code></td>
+        <td><code>CityGraph</code> class maintaining vertex metadata, adjacency lists (for Dijkstra), directed edge lists (for Bellman-Ford), and dynamic traffic/metric cloning.</td>
+      </tr>
+      <tr>
+        <td><code>src/algorithms/minHeap.js</code></td>
+        <td>Custom Binary Min-Heap priority queue supporting <i>O</i>(log <i>V</i>) <code>push</code> and <code>pop</code> with operation counters.</td>
+      </tr>
+      <tr>
+        <td><code>src/algorithms/dijkstra.js</code></td>
+        <td><code>runDijkstra()</code> implementation with non-negative weight validation, lazy priority-queue skipping, and path reconstruction.</td>
+      </tr>
+      <tr>
+        <td><code>src/algorithms/bellmanFord.js</code></td>
+        <td><code>runBellmanFord()</code> with |<i>V</i>| &minus; 1 relaxation passes, early-termination flag, |<i>V</i>|-th pass negative-cycle detection, and cycle extraction.</td>
+      </tr>
+      <tr>
+        <td><code>src/data/smartCityMap.js</code></td>
+        <td>18-vertex / 34-road NeoMetro city map, EV negative-weight demo, negative-cycle demo, and seeded deterministic random graph generator.</td>
+      </tr>
+      <tr>
+        <td><code>src/benchmark/benchmark.js</code></td>
+        <td>High-resolution (<code>process.hrtime.bigint()</code>) multi-trial benchmark runner exporting JSON and CSV results.</td>
+      </tr>
+      <tr>
+        <td><code>src/cli.js</code> &amp; <code>server.js</code></td>
+        <td>CLI utility and local HTTP server powering the interactive HTML5/SVG dashboard in <code>public/</code>.</td>
+      </tr>
+      <tr>
+        <td><code>tests/algorithms.test.js</code></td>
+        <td>Automated verification suite using <code>node:test</code> and <code>node:assert/strict</code>.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <p>
+    In <code>src/data/smartCityMap.js</code>, the NeoMetro network contains <strong>18 vertices</strong> (such as <code>UNI</code>, <code>GOV</code>, <code>HUB</code>, <code>GRD</code>, <code>AIR</code>, <code>HSP</code>, <code>TEC</code>)
+    connected by <strong>34 roads</strong> (31 bidirectional and 3 one-way priority corridors, yielding <strong>65 directed edges</strong>). Dynamic travel-time edge weights incorporate congestion multipliers:
+    <code>speed = max(10, speedKmh / (1 + (congestion - 1) * trafficMultiplier))</code>, and <code>weight = (distanceKm / speed) * 60</code> minutes.
+  </p>
+
+  <div class="page-break"></div>
+
+  <h2>4. Algorithms Implemented</h2>
+
+  <h3>4.1 Dijkstra&rsquo;s Algorithm (Binary Min-Heap Priority Queue)</h3>
+  <p>
+    Dijkstra&rsquo;s algorithm solves the single-source shortest path problem on graphs with <strong>non-negative edge weights</strong> (<i>w</i>(<i>u</i>, <i>v</i>) &ge; 0).
+    It maintains a tentative distance map <code>dist[v]</code> initialized to &infin; (and <code>dist[source] = 0</code>) and greedily extracts the unsettled vertex <i>u</i> with the smallest tentative distance from a Binary Min-Heap.
+    Once <i>u</i> is popped and marked visited, its shortest distance is final, and all outgoing edges (<i>u</i>, <i>v</i>) are relaxed.
+  </p>
+  <pre>DIJKSTRA(G, source, target):
+  for each vertex v in G.V: dist[v] = INF; prev[v] = NULL
+  dist[source] = 0
+  pq = MinHeap(); pq.push((source, 0))
+  while not pq.isEmpty():
+    (u, d) = pq.pop()
+    if u in visited: continue
+    visited.add(u)
+    if u == target: break
+    for each edge (u, v, w) in G.adj[u]:
+      if v in visited: continue
+      if d + w &lt; dist[v]:
+        dist[v] = d + w; prev[v] = u
+        pq.push((v, dist[v]))</pre>
+  <p>
+    <strong>Complexity:</strong> With an adjacency list and Binary Min-Heap, each vertex is settled once and each edge causes at most one heap insertion, giving
+    <strong>Time Complexity: <i>O</i>((<i>V</i> + <i>E</i>) log <i>V</i>)</strong> and <strong>Space Complexity: <i>O</i>(<i>V</i> + <i>E</i>)</strong>.
+  </p>
+
+  <h3>4.2 Bellman-Ford Algorithm (Edge Relaxation &amp; Cycle Detection)</h3>
+  <p>
+    Unlike Dijkstra&rsquo;s greedy strategy, Bellman-Ford uses dynamic programming over path length. Because any simple shortest path in a graph of |<i>V</i>| vertices contains at most |<i>V</i>| &minus; 1 edges,
+    relaxing all |<i>E</i>| directed edges across |<i>V</i>| &minus; 1 iterations guarantees convergence to optimal shortest paths even when <strong>negative edge weights</strong> exist.
+    An optional <strong>early-termination</strong> check stops as soon as a full pass produces zero distance improvements. Finally, a |<i>V</i>|-th pass checks if any edge can still be relaxed; if so, a reachable <strong>negative-weight cycle</strong> exists.
+  </p>
+  <pre>BELLMAN-FORD(G, source, earlyTerminate):
+  for each vertex v in G.V: dist[v] = INF; prev[v] = NULL
+  dist[source] = 0
+  for pass = 1 to |V| - 1:
+    updated = false
+    for each directed edge (u, v, w) in G.E:
+      if dist[u] != INF and dist[u] + w &lt; dist[v]:
+        dist[v] = dist[u] + w; prev[v] = u; updated = true
+    if earlyTerminate and not updated: break
+  if not earlyTerminate or updated:
+    for each directed edge (u, v, w) in G.E:
+      if dist[u] != INF and dist[u] + w &lt; dist[v]:
+        return NEGATIVE_CYCLE_DETECTED</pre>
+  <p>
+    <strong>Complexity:</strong> Strict worst-case <strong>Time Complexity is <i>O</i>(<i>V</i> &middot; <i>E</i>)</strong> (which approaches <i>O</i>(<i>V</i><sup>3</sup>) on dense graphs where <i>E</i> = &Theta;(<i>V</i><sup>2</sup>)).
+    With early termination on well-behaved positive-weight graphs, execution finishes in <i>O</i>(<i>k</i> &middot; <i>E</i>) where <i>k</i> is the maximum hop depth (<i>k</i> &ll; <i>V</i>). <strong>Space Complexity is <i>O</i>(<i>V</i> + <i>E</i>)</strong>.
+  </p>
+
+  <h3>4.3 Theoretical Comparison Summary</h3>
+  <table>
+    <thead>
+      <tr>
+        <th>Criterion</th>
+        <th>Dijkstra&rsquo;s Algorithm (Min-Heap)</th>
+        <th>Bellman-Ford Algorithm</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Algorithmic Paradigm</td>
+        <td>Greedy (Best-First with Min-Heap)</td>
+        <td>Dynamic Programming (Iterative Edge Relaxation)</td>
+      </tr>
+      <tr>
+        <td>Worst-Case Time Complexity</td>
+        <td><code>O((V + E) log V)</code></td>
+        <td><code>O(V &middot; E)</code> (up to <code>O(V&sup3;)</code> for dense graphs)</td>
+      </tr>
+      <tr>
+        <td>Space Complexity</td>
+        <td><code>O(V + E)</code></td>
+        <td><code>O(V + E)</code></td>
+      </tr>
+      <tr>
+        <td>Negative Edge Weights</td>
+        <td>Not supported (violates greedy invariant)</td>
+        <td>Fully supported (exact shortest path)</td>
+      </tr>
+      <tr>
+        <td>Negative Cycle Detection</td>
+        <td>No</td>
+        <td>Yes (via |<i>V</i>|-th relaxation pass + cycle extraction)</td>
+      </tr>
+      <tr>
+        <td>Ideal Smart City Use Case</td>
+        <td>Large-scale road navigation (time/distance &ge; 0)</td>
+        <td>EV green-credit/subsidy routing &amp; anomaly detection</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="page-break"></div>
+
+  <h2>5. Experimental Setup &amp; Performance Comparison</h2>
+  <p>
+    Benchmarks were executed on <strong>Node.js v24.11.1 (Windows x64)</strong> after a 5-iteration V8 JIT warm-up using deterministic seeded graphs
+    (<code>generateRandomCityGraph</code>) across both <strong>Sparse</strong> (<i>E</i><sub>dir</sub> = 6<i>V</i>) and <strong>Dense</strong> (<i>E</i><sub>dir</sub> &approx; 0.25<i>V</i><sup>2</sup>) topologies.
+    Every measurement averages 3 trials (and verifies 100% shortest-path cost parity between Dijkstra and Bellman-Ford).
+  </p>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Topology</th>
+        <th>Vertices (<i>V</i>)</th>
+        <th>Directed Edges (<i>E</i>)</th>
+        <th>Dijkstra (ms)</th>
+        <th>BF Early-Exit (ms)</th>
+        <th>BF Strict <i>O</i>(<i>VE</i>) (ms)</th>
+        <th>BF Passes</th>
+        <th>Speedup (vs Strict)</th>
+        <th>Parity</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td>Sparse</td><td>20</td><td>120</td><td>0.0879</td><td>0.0541</td><td>0.2326</td><td>3</td><td>2.65&times;</td><td><span class="badge-pass">PASS</span></td></tr>
+      <tr><td>Sparse</td><td>50</td><td>300</td><td>0.1565</td><td>0.3703</td><td>0.8360</td><td>6</td><td>5.34&times;</td><td><span class="badge-pass">PASS</span></td></tr>
+      <tr><td>Sparse</td><td>100</td><td>600</td><td>0.2143</td><td>0.4090</td><td>4.5880</td><td>7</td><td>21.41&times;</td><td><span class="badge-pass">PASS</span></td></tr>
+      <tr><td>Sparse</td><td>250</td><td>1,500</td><td>0.4280</td><td>1.4547</td><td>30.6721</td><td>7</td><td>71.66&times;</td><td><span class="badge-pass">PASS</span></td></tr>
+      <tr><td>Sparse</td><td>500</td><td>3,000</td><td>2.0565</td><td>1.9083</td><td>119.6922</td><td>6</td><td>58.20&times;</td><td><span class="badge-pass">PASS</span></td></tr>
+      <tr><td>Sparse</td><td>1,000</td><td>6,000</td><td>1.4251</td><td>4.1686</td><td>450.8349</td><td>7</td><td>316.35&times;</td><td><span class="badge-pass">PASS</span></td></tr>
+      <tr><td>Sparse</td><td>1,500</td><td>9,000</td><td>2.4992</td><td>6.8522</td><td>1,165.5031</td><td>7</td><td><strong>466.35&times;</strong></td><td><span class="badge-pass">PASS</span></td></tr>
+      <tr><td>Dense</td><td>20</td><td>160</td><td>0.0421</td><td>0.0647</td><td>0.2928</td><td>3</td><td>6.95&times;</td><td><span class="badge-pass">PASS</span></td></tr>
+      <tr><td>Dense</td><td>50</td><td>600</td><td>0.1277</td><td>0.2777</td><td>2.3350</td><td>4</td><td>18.29&times;</td><td><span class="badge-pass">PASS</span></td></tr>
+      <tr><td>Dense</td><td>100</td><td>2,500</td><td>0.2998</td><td>1.0085</td><td>18.8597</td><td>5</td><td>62.91&times;</td><td><span class="badge-pass">PASS</span></td></tr>
+      <tr><td>Dense</td><td>250</td><td>15,500</td><td>2.0345</td><td>8.0479</td><td>421.4572</td><td>5</td><td>207.16&times;</td><td><span class="badge-pass">PASS</span></td></tr>
+      <tr><td>Dense</td><td>500</td><td>62,500</td><td>18.1811</td><td>42.4015</td><td>4,207.6865</td><td>5</td><td>231.43&times;</td><td><span class="badge-pass">PASS</span></td></tr>
+      <tr><td>Dense</td><td>1,000</td><td>250,000</td><td>47.9899</td><td>215.5786</td><td>43,704.2837</td><td>5</td><td><strong>910.70&times;</strong></td><td><span class="badge-pass">PASS</span></td></tr>
+    </tbody>
+  </table>
+
+  <div class="callout">
+    <strong>Key Experimental Findings:</strong>
+    <ul style="margin:4px 0 0 18px;">
+      <li><strong>Quadratic/Cubic Divergence:</strong> In dense networks at <i>V</i> = 1000 (<i>E</i> = 250,000), strict Bellman-Ford performs 250,000,000 edge relaxation checks and takes <strong>43.70 seconds</strong>, whereas Dijkstra finishes in <strong>47.99 ms</strong> (a <strong>910.7&times;</strong> speedup).</li>
+      <li><strong>Early Termination Impact:</strong> Adding early termination cuts Bellman-Ford&rsquo;s passes from <i>V</i> &minus; 1 = 999 down to just <strong>5 passes</strong> on the <i>V</i> = 1000 dense graph (215.58 ms vs. 43,704.28 ms), yet Dijkstra remains <strong>4.49&times;</strong> faster.</li>
+      <li><strong>Tiny Graph Crossover (<i>V</i> = 20):</strong> On very small graphs (<i>V</i> = 20, sparse), linear array scans in early-terminating Bellman-Ford (0.0541 ms) can match or slightly beat Min-Heap overhead (0.0879 ms), confirming asymptotic constants matter only at tiny <i>V</i>.</li>
+    </ul>
+  </div>
+
+  <h2>6. Verification &amp; Automated Testing</h2>
+  <p>
+    Six automated test cases in <code>tests/algorithms.test.js</code> verify correctness across edge cases:
+    (1) Binary Min-Heap ordering invariant, (2) Route cost parity across NeoMetro city pairs, (3) Disconnected destination handling (<code>found = false</code>, cost &infin;),
+    (4) Negative edge weights where safe Dijkstra rejects the graph and Bellman-Ford yields the exact optimal path <code>A &rarr; C &rarr; B &rarr; D &rarr; E</code> (cost <code>7</code> vs. unsafe greedy Dijkstra&rsquo;s <code>9</code>),
+    (5) Reachable negative-weight cycle detection (<code>B &rarr; C &rarr; B</code>), and (6) Random-graph distance-vector parity across sizes <i>V</i> &isin; {15, 40, 80}. All <strong>6/6 tests pass</strong>.
+  </p>
+
+  <div class="page-break"></div>
+
+  <h2>7. Project Screenshots</h2>
+
+  <div class="figure">
+    <img src="../screenshots/01_city_map_route.png" alt="Smart City Interactive Map and Route Optimizer" />
+    <div class="caption">
+      Figure 1: Interactive NeoMetro Smart City Map (18 vertices, 65 directed edges) computing the optimal route from Metro University Campus (UNI) to International Airport (AIR) in 28.46 min via UNI &rarr; GOV &rarr; HUB &rarr; GRD &rarr; AIR, with side-by-side Dijkstra and Bellman-Ford metrics.
+    </div>
+  </div>
+
+  <div class="figure">
+    <img src="../screenshots/02_benchmark_charts.png" alt="Multi-Scale Performance Benchmark Charts" />
+    <div class="caption">
+      Figure 2: Performance Benchmark Studio comparing Dijkstra, Bellman-Ford (Early-Exit), and Bellman-Ford (Strict Worst-Case) across Sparse and Dense graphs up to V = 1500.
+    </div>
+  </div>
+
+  <div class="page-break"></div>
+
+  <div class="figure">
+    <img src="../screenshots/03_negative_cycle_lab.png" alt="Negative Weight and Cycle Detection Lab" />
+    <div class="caption">
+      Figure 3: Negative Weight &amp; Cycle Lab &mdash; Case A illustrates greedy Dijkstra failing on a -5 EV green-corridor credit (reporting 9 instead of 7), while Case B shows Bellman-Ford detecting the negative cycle B &rarr; C &rarr; B.
+    </div>
+  </div>
+
+  <div class="figure">
+    <img src="../screenshots/04_cli_and_tests.png" alt="CLI Output and Unit Test Suite Execution" />
+    <div class="caption">
+      Figure 4: Automated Unit Test Suite (6/6 passing) and Command-Line Interface output for Smart City shortest-path queries and negative-weight demonstrations.
+    </div>
+  </div>
+
+  <h2>8. Conclusion &amp; Future Scope</h2>
+  <p>
+    The Smart City Route Optimization System successfully models urban road infrastructure as a weighted graph and provides an end-to-end empirical comparison between Dijkstra&rsquo;s and Bellman-Ford algorithms.
+    For standard non-negative urban navigation (travel time and physical distance), <strong>Dijkstra&rsquo;s algorithm with a Binary Min-Heap</strong> is decisively superior, scaling smoothly to thousands of intersections in milliseconds.
+    Conversely, <strong>Bellman-Ford</strong> remains indispensable whenever road networks include negative cost adjustments (EV regenerative corridors, toll rebates, or emission credits) or require negative-cycle anomaly detection.
+  </p>
+  <p>
+    <strong>Future Enhancements:</strong> Incorporating A* heuristic search using Euclidean vertex coordinates (<i>x</i>, <i>y</i>), Contraction Hierarchies for continental-scale sub-millisecond queries, and real-time WebSocket ingestion of live IoT traffic sensor feeds.
+  </p>
+
+  <h2>9. References</h2>
+  <ol>
+    <li>Cormen, T. H., Leiserson, C. E., Rivest, R. L., &amp; Stein, C. (2022). <em>Introduction to Algorithms</em> (4th ed.). MIT Press. (Chapter 22: Single-Source Shortest Paths).</li>
+    <li>Dijkstra, E. W. (1959). &ldquo;A note on two problems in connexion with graphs.&rdquo; <em>Numerische Mathematik</em>, 1(1), 269&ndash;271.</li>
+    <li>Bellman, R. (1958). &ldquo;On a routing problem.&rdquo; <em>Quarterly of Applied Mathematics</em>, 16(1), 87&ndash;90.</li>
+    <li>Ford, L. R. (1956). <em>Network Flow Theory</em>. RAND Corporation Paper P-923.</li>
+  </ol>
+
+</body>
+</html>

@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Smart City Route Optimization System — Capstone Project</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <div class="brand-badge">SC</div>
+      <div>
+        <h1>Smart City Route Optimization System</h1>
+        <p class="subtitle">Shortest Path Engine &amp; Complexity Analyzer — Dijkstra vs. Bellman-Ford</p>
+      </div>
+    </div>
+    <div class="meta-pill">
+      <span><strong>Himanshu Yadav</strong> | Roll No: <strong>2501730437</strong></span>
+    </div>
+  </header>
+
+  <nav class="tab-bar">
+    <button class="tab-btn active" data-tab="route">1. City Map &amp; Route Optimizer</button>
+    <button class="tab-btn" data-tab="benchmark">2. Performance Benchmark Studio</button>
+    <button class="tab-btn" data-tab="negative">3. Negative Weight &amp; Cycle Lab</button>
+  </nav>
+
+  <main class="container">
+    <!-- TAB 1: ROUTE OPTIMIZER -->
+    <section id="tab-route" class="tab-panel active">
+      <div class="control-bar card">
+        <div class="control-group">
+          <label for="scenario-select">City Scenario</label>
+          <select id="scenario-select">
+            <option value="city">NeoMetro Smart City (18 Nodes, 34 Roads)</option>
+            <option value="negative">EV Green-Corridor (Negative Edge Weights)</option>
+            <option value="cycle">Toll Anomaly (Negative-Weight Cycle)</option>
+          </select>
+        </div>
+        <div class="control-group">
+          <label for="from-select">Origin Vertex</label>
+          <select id="from-select"></select>
+        </div>
+        <div class="control-group">
+          <label for="to-select">Destination Vertex</label>
+          <select id="to-select"></select>
+        </div>
+        <div class="control-group">
+          <label for="metric-select">Edge Weight Metric</label>
+          <select id="metric-select">
+            <option value="time">Travel Time (min)</option>
+            <option value="distance">Physical Distance (km)</option>
+            <option value="eco">Eco-Cost (with EV Credits)</option>
+          </select>
+        </div>
+        <div class="control-group slider-group">
+          <label for="traffic-slider">Traffic Congestion: <strong id="traffic-val">1.0x</strong></label>
+          <input id="traffic-slider" type="range" min="0.8" max="2.5" step="0.1" value="1.0" />
+        </div>
+        <div class="control-actions">
+          <button id="optimize-btn" class="btn-primary">Compute Shortest Path</button>
+        </div>
+      </div>
+
+      <div class="route-grid">
+        <div class="card map-card">
+          <div class="card-header">
+            <div>
+              <h2 id="map-title">NeoMetro Smart City Graph</h2>
+              <span id="graph-stats" class="badge-muted">18 Vertices · 65 Directed Edges</span>
+            </div>
+            <div class="legend">
+              <span class="legend-item"><i class="dot dot-origin"></i> Origin</span>
+              <span class="legend-item"><i class="dot dot-dest"></i> Destination</span>
+              <span class="legend-item"><i class="dot dot-path"></i> Optimal Path</span>
+              <span class="legend-item"><i class="dot dot-neg"></i> Negative Weight</span>
+            </div>
+          </div>
+          <div class="svg-wrapper">
+            <svg id="city-svg" viewBox="0 0 980 580" xmlns="http://www.w3.org/2000/svg"></svg>
+          </div>
+        </div>
+
+        <div class="metrics-column">
+          <div class="card algo-card dijkstra-card">
+            <div class="algo-header">
+              <span class="algo-tag tag-dijkstra">Dijkstra's Algorithm</span>
+              <span class="complexity">O((V + E) log V)</span>
+            </div>
+            <div id="dijkstra-status" class="algo-status"></div>
+            <div class="kpi-grid" id="dijkstra-kpis"></div>
+            <div class="path-box" id="dijkstra-path"></div>
+          </div>
+
+          <div class="card algo-card bf-card">
+            <div class="algo-header">
+              <span class="algo-tag tag-bf">Bellman-Ford Algorithm</span>
+              <span class="complexity">O(V · E)</span>
+            </div>
+            <div id="bf-status" class="algo-status"></div>
+            <div class="kpi-grid" id="bf-kpis"></div>
+            <div class="path-box" id="bf-path"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card table-card">
+        <div class="card-header">
+          <h2>Turn-by-Turn Optimal Route Breakdown</h2>
+          <span id="route-summary-pill" class="badge-success">Verified Match</span>
+        </div>
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Step</th>
+              <th>From Vertex</th>
+              <th>To Vertex</th>
+              <th>Road Segment</th>
+              <th>Distance</th>
+              <th>Edge Weight</th>
+            </tr>
+          </thead>
+          <tbody id="segments-tbody"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- TAB 2: BENCHMARK STUDIO -->
+    <section id="tab-benchmark" class="tab-panel">
+      <div class="card bench-header-card">
+        <div>
+          <h2>Multi-Scale Algorithm Performance Comparison</h2>
+          <p class="muted">Empirical timing &amp; edge relaxation analysis across Sparse (E &asymp; 6V) and Dense (E &asymp; 0.25V&sup2;) city networks using high-resolution nanosecond timers.</p>
+        </div>
+        <button id="run-bench-btn" class="btn-primary">Re-run Live Benchmark</button>
+      </div>
+
+      <div class="charts-grid">
+        <div class="card">
+          <div class="card-header">
+            <h3>Sparse Graphs: Execution Time (ms) vs Vertices (V)</h3>
+            <span class="badge-muted">E &asymp; 6V directed edges</span>
+          </div>
+          <svg id="sparse-chart" viewBox="0 0 560 300" class="chart-svg"></svg>
+        </div>
+        <div class="card">
+          <div class="card-header">
+            <h3>Dense Graphs: Execution Time (ms) vs Vertices (V)</h3>
+            <span class="badge-muted">E &asymp; 0.25V&sup2; directed edges</span>
+          </div>
+          <svg id="dense-chart" viewBox="0 0 560 300" class="chart-svg"></svg>
+        </div>
+      </div>
+
+      <div class="card table-card">
+        <div class="card-header">
+          <h3>Empirical Benchmark Measurements</h3>
+          <span id="bench-meta" class="badge-muted"></span>
+        </div>
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Topology</th>
+              <th>Vertices (V)</th>
+              <th>Directed Edges (E)</th>
+              <th>Dijkstra (ms)</th>
+              <th>BF Early-Exit (ms)</th>
+              <th>BF Strict Worst-Case (ms)</th>
+              <th>BF Passes</th>
+              <th>Dijkstra Speedup (vs Strict)</th>
+              <th>Parity</th>
+            </tr>
+          </thead>
+          <tbody id="bench-tbody"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- TAB 3: NEGATIVE WEIGHT & CYCLE LAB -->
+    <section id="tab-negative" class="tab-panel">
+      <div class="neg-grid">
+        <div class="card">
+          <div class="card-header">
+            <h2>Case A: Negative Edge Weight (No Cycle)</h2>
+            <span class="badge-warn">Greedy Dijkstra Fails</span>
+          </div>
+          <p class="muted">
+            In EV green-corridor routing, edge <code>C &rarr; B</code> grants a <code>-5</code> regenerative subsidy.
+            Greedy Dijkstra settles <code>B</code> early at cost <code>4</code>, missing the cheaper <code>A &rarr; C &rarr; B</code> path of cost <code>2</code>.
+          </p>
+          <svg id="neg-a-svg" viewBox="0 0 960 440" class="mini-map-svg"></svg>
+          <div id="neg-a-comparison" class="neg-compare-box"></div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <h2>Case B: Reachable Negative-Weight Cycle</h2>
+            <span class="badge-danger">Cycle Detected by Bellman-Ford</span>
+          </div>
+          <p class="muted">
+            Adding <code>B &rarr; C (+2)</code> forms cycle <code>B &rarr; C &rarr; B</code> with total weight <code>2 + (-5) = -3 &lt; 0</code>.
+            Bellman-Ford's <code>|V|</code>-th relaxation pass detects and isolates this cycle automatically.
+          </p>
+          <svg id="neg-b-svg" viewBox="0 0 960 440" class="mini-map-svg"></svg>
+          <div id="neg-b-comparison" class="neg-compare-box"></div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>

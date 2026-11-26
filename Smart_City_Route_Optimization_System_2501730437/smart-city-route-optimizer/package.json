@@ -1,0 +1,17 @@
+{
+  "name": "smart-city-route-optimization-system",
+  "version": "1.0.0",
+  "description": "Smart City Route Optimization System comparing Dijkstra's and Bellman-Ford shortest-path algorithms across varying graph sizes.",
+  "author": "Himanshu Yadav (Roll No: 2501730437)",
+  "license": "MIT",
+  "type": "module",
+  "scripts": {
+    "start": "node server.js",
+    "test": "node --test tests/algorithms.test.js",
+    "benchmark": "node src/benchmark/benchmark.js",
+    "cli": "node src/cli.js"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
